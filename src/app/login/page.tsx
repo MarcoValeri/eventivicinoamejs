@@ -35,7 +35,7 @@ const LoginPage = () => {
                     const token = await user.getIdToken();
                     setAuthTokenCookie(token);
                     // If user is logged in and on the login page, redirect them to home
-                    router.push('/');
+                    router.push('/admin');
                 } catch (tokenError) {
                     console.error("Error setting auth token cookie on auth change:", tokenError);
                     setAuthTokenCookie(null); // Clear cookie if token retrieval fails
