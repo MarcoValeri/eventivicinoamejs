@@ -6,6 +6,9 @@ import { onAuthStateChanged, signInWithEmailAndPassword, User } from "firebase/a
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
+// TEST
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // Helper function to set/clear the cookie
 const setAuthTokenCookie = (token: string | null) => {
     if (token) {
@@ -60,6 +63,8 @@ const LoginPage = () => {
             // Get ID token and set it in cookie
             const token = await userCredential.user.getIdToken();
             setAuthTokenCookie(token);
+
+            await sleep(100);
 
             router.push('/admin'); // Redirect to admin page after successful login
         } catch (err: any) {
