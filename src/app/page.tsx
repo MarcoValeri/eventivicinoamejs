@@ -7,7 +7,7 @@ const Home = () => {
         <div>
             <Nav />
             <h2>Eventi Vicino a me</h2>
-            <h3>Test 1</h3>
+            <h3>Test 2</h3>
         </div>
     )
 };
