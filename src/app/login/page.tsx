@@ -51,40 +51,45 @@ const LoginPage = () => {
     //     }
     // };
 
+    // ... inside your LoginPage component
+
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
-    console.log("Checkpoint 1: Login process initiated.");
+        e.preventDefault();
+        setError(null);
+        setIsLoading(true);
+        console.log("Checkpoint 1: Login process initiated.");
 
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log(`Checkpoint 2: Sign-in successful for ${userCredential.user.email}`);
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            console.log(`Checkpoint 2: Sign-in successful for ${userCredential.user.email}`);
 
-        const token = await userCredential.user.getIdToken();
-        console.log("Checkpoint 3: ID token retrieved successfully.");
+            const token = await userCredential.user.getIdToken();
+            console.log("Checkpoint 3: ID token retrieved successfully.");
 
-        setAuthTokenCookie(token);
-        console.log("Checkpoint 4: Auth cookie has been set.");
+            setAuthTokenCookie(token);
+            console.log("Checkpoint 4: Auth cookie has been set.");
 
-        // This is the goal
-        router.push('/admin');
-        console.log("Checkpoint 5: router.push('/admin') has been called.");
+            // --- THE CRITICAL FIX IS HERE ---
+            // Add a tiny delay to ensure the browser processes the cookie
+            // before the navigation request is sent to the server.
+            await new Promise(resolve => setTimeout(resolve, 100)); // 100ms pause
 
-    } catch (err: any) {
-        // If the code fails at any point in the 'try' block, it will jump here.
-        console.error("CRITICAL: The process failed and jumped to the catch block.", err);
-        
-        if (err.code === 'auth/invalid-credential') {
-            setError('Invalid email or password.');
-        } else {
-            setError('An unexpected error occurred during login.');
+            router.push('/admin');
+            console.log("Checkpoint 5: router.push('/admin') has been called.");
+
+        } catch (err: any) {
+            console.error("CRITICAL: The process failed and jumped to the catch block.", err);
+            if (err.code === 'auth/invalid-credential') {
+                setError('Invalid email or password.');
+            } else {
+                setError('An unexpected error occurred during login.');
+            }
+        } finally {
+            setIsLoading(false);
+            console.log("Checkpoint 6: 'finally' block has been executed.");
         }
-    } finally {
-        setIsLoading(false);
-        console.log("Checkpoint 6: 'finally' block has been executed.");
-    }
-};
+    };
+
 
     return (
         <div>
