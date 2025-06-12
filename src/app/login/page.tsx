@@ -23,33 +23,68 @@ const LoginPage = () => {
 
     // The problematic useEffect has been REMOVED.
 
+    // const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+    //     setError(null);
+    //     setIsLoading(true);
+
+    //     try {
+    //         const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    //         console.log(`User logged in: ${userCredential.user.email}`);
+
+    //         const token = await userCredential.user.getIdToken();
+    //         setAuthTokenCookie(token);
+
+    //         // The only redirect happens here, after a successful login.
+    //         router.push('/admin');
+    //     } catch (err: any) {
+    //         console.error('Login Error:', err);
+    //         setAuthTokenCookie(null); // Clear cookie on failure
+    //         // Your detailed error handling logic is good...
+    //         if (err.code === 'auth/invalid-credential') {
+    //             setError('Invalid email or password.');
+    //         } else {
+    //             setError('An unexpected error occurred.');
+    //         }
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
+
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setError(null);
-        setIsLoading(true);
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+    console.log("Checkpoint 1: Login process initiated.");
 
-        try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            console.log(`User logged in: ${userCredential.user.email}`);
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log(`Checkpoint 2: Sign-in successful for ${userCredential.user.email}`);
 
-            const token = await userCredential.user.getIdToken();
-            setAuthTokenCookie(token);
+        const token = await userCredential.user.getIdToken();
+        console.log("Checkpoint 3: ID token retrieved successfully.");
 
-            // The only redirect happens here, after a successful login.
-            router.push('/admin');
-        } catch (err: any) {
-            console.error('Login Error:', err);
-            setAuthTokenCookie(null); // Clear cookie on failure
-            // Your detailed error handling logic is good...
-            if (err.code === 'auth/invalid-credential') {
-                setError('Invalid email or password.');
-            } else {
-                setError('An unexpected error occurred.');
-            }
-        } finally {
-            setIsLoading(false);
+        setAuthTokenCookie(token);
+        console.log("Checkpoint 4: Auth cookie has been set.");
+
+        // This is the goal
+        router.push('/admin');
+        console.log("Checkpoint 5: router.push('/admin') has been called.");
+
+    } catch (err: any) {
+        // If the code fails at any point in the 'try' block, it will jump here.
+        console.error("CRITICAL: The process failed and jumped to the catch block.", err);
+        
+        if (err.code === 'auth/invalid-credential') {
+            setError('Invalid email or password.');
+        } else {
+            setError('An unexpected error occurred during login.');
         }
-    };
+    } finally {
+        setIsLoading(false);
+        console.log("Checkpoint 6: 'finally' block has been executed.");
+    }
+};
 
     return (
         <div>
