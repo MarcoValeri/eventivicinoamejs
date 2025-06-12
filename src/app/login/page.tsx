@@ -72,7 +72,7 @@ const LoginPage = () => {
             // --- THE CRITICAL FIX IS HERE ---
             // Add a tiny delay to ensure the browser processes the cookie
             // before the navigation request is sent to the server.
-            await new Promise(resolve => setTimeout(resolve, 100)); // 100ms pause
+            await new Promise(resolve => setTimeout(resolve, 1000)); // 100ms pause
 
             router.push('/admin');
             console.log("Checkpoint 5: router.push('/admin') has been called.");
