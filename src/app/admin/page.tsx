@@ -1,18 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { onAuthStateChanged, User, signOut } from "firebase/auth";
+import { onAuthStateChanged, User, signOut } from "firebase/auth"; // Import signOut
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 
+// Helper function to clear the cookie (you can move this to a shared file)
 const clearAuthTokenCookie = () => {
     document.cookie = 'firebaseIdToken=; path=/; max-age=0; SameSite=Lax';
 };
 
 const AdminDashboard = () => {
-
     const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true); // Still useful for showing a loading UI
     const router = useRouter();
 
     useEffect(() => {
@@ -28,7 +28,7 @@ const AdminDashboard = () => {
 
         return () => unsubscribe();
     }, [router]);
-
+    
     const handleLogout = async () => {
         try {
             await signOut(auth);
@@ -41,9 +41,7 @@ const AdminDashboard = () => {
     };
 
     if (loading) {
-        return (
-            <p>Loading....</p>
-        )
+        return <p>Loading....</p>;
     }
 
     if (!user) {
@@ -58,7 +56,7 @@ const AdminDashboard = () => {
             <p>Welcome, {user.email}</p>
             <button onClick={handleLogout}>Logout</button>
         </div>
-    )
+    );
 };
 
 export default AdminDashboard;
